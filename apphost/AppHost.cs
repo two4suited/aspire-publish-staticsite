@@ -26,17 +26,19 @@ static class DeploymentExtensions
         {
             return builder;
         }
-        
+
         var storage = builder.AddAzureStorage($"{name}-storage")
             .ConfigureInfrastructure(infra =>
             {
                 var storage = infra.GetProvisionableResources().OfType<StorageAccount>().Single();
                 // Needs for static website support
                 storage.AllowBlobPublicAccess = true;
-                
-            });
 
-        storage.WithRoleAssignments<AzureStorageResource>(storage, StorageBuiltInRole.StorageAccountContributor);
+
+            });
+            //.WithRoleAssignments<AzureStorageResource>(StorageBuiltInRole.StorageBlobDataContributor);
+
+       
               
         var frontDoor = builder.AddResource(new AzureFrontDoorResource($"{name}-afd"))
             .WithParameter("frontDoorName", $"{name}-afd")
