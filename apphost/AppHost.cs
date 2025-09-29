@@ -33,7 +33,11 @@ static class DeploymentExtensions
                 var storage = infra.GetProvisionableResources().OfType<StorageAccount>().Single();
                 // Needs for static website support
                 storage.AllowBlobPublicAccess = true;
+                
             });
+
+        storage.WithRoleAssignments<AzureStorageResource>(storage, StorageBuiltInRole.StorageAccountContributor);
+              
         var frontDoor = builder.AddResource(new AzureFrontDoorResource($"{name}-afd"))
             .WithParameter("frontDoorName", $"{name}-afd")
             .WithParameter("storageAccountName", storage.Resource.NameOutputReference);
